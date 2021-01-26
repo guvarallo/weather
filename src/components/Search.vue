@@ -1,0 +1,122 @@
+<template>
+  <div class="flex justify-center mt-8">
+    <form
+      class="m-4 flex flex-col"
+      @submit.prevent="getWeather"
+      @keypress="handleKeyPress"
+    >
+      <input
+        type="text"
+        v-model="city"
+        class="text-gray-800 border-gray-200 border rounded p-3 text-center "
+        placeholder="Enter the city name"
+      />
+      <button
+        class="rounded transition duration-500 ease-in-out text-white bg-blue-600 hover:bg-red-600 transform p-3 mt-3"
+      >
+        Search
+      </button>
+    </form>
+  </div>
+
+  <div
+    class="flex justify-center items-center flex-col mt-10"
+    v-if="Object.keys(weatherData).length !== 0"
+  >
+    <h1>City of {{ weatherData.name }}</h1>
+    <div class="flex justify-center flex-col items-center">
+      <img :src="iconUrl" alt="weather icon" class="w-14" />
+      <p class="">{{ Math.round(weatherData.main.temp - 273.15) }}°C</p>
+    </div>
+
+    <p class="">
+      Today's lowest: {{ Math.round(weatherData.main.temp_min - 273.15) }}°C
+    </p>
+    <p class="">
+      Today's highest: {{ Math.round(weatherData.main.temp_max - 273.15) }}°C
+    </p>
+    <span v-on:click="isVisible = !isVisible">More info</span>
+    <div v-if="isVisible">
+      <p>
+        Wind speed: {{ Math.round((weatherData.wind.speed * 18) / 5) }} km/h
+      </p>
+      <p>Humidity: {{ weatherData.main.humidity }}%</p>
+      <p>Pressure: {{ weatherData.main.pressure }} mb</p>
+      <p>Sunrise: {{ sunrise }}h</p>
+      <p>Sunset: {{ sunset }}h</p>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      city: "",
+      weatherData: {},
+      iconUrl: "",
+      isLoading: false,
+      isVisible: false,
+      sunrise: "",
+      sunset: "",
+    };
+  },
+  async beforeMount() {
+    const getUserPosition = () => {
+      return new Promise(function(resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+    };
+    const data = await getUserPosition();
+    const lat = data.coords.latitude;
+    const lon = data.coords.longitude;
+
+    const url =
+      "https://us1.locationiq.com/v1/reverse.php?key=pk.0eae67ccc5c0431281c047f921253dbe&lat=" +
+      lat +
+      "&lon=" +
+      lon +
+      "&format=json";
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => (this.city = data.address.city))
+      .catch(err => console.error(err));
+  },
+  methods: {
+    getWeather() {
+      const url = "http://api.openweathermap.org/data/2.5/weather?";
+      const key = "7ac325fd18f5ce43cc1cc62f3e3da84f";
+      return fetch(`${url}q=${this.city}&appid=${key}`)
+        .then(res => res.json())
+        .then(data => {
+          this.weatherData = data;
+          this.iconUrl = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+
+          const sunriseDate = new Date(data.sys.sunrise * 1000);
+          const sunsetDate = new Date(data.sys.sunset * 1000);
+          console.log(data.timezone);
+          console.log(data.sys.sunrise);
+          const sunriseHour = sunriseDate.getHours();
+          const sunsetHour = sunsetDate.getHours();
+          const sunriseMinute = sunriseDate.getMinutes();
+          const sunsetMinute = sunsetDate.getMinutes();
+          // this.sunrise = `${sunriseHour}:${sunriseMinute}`;
+          this.sunrise = `${sunriseHour}:${
+            sunriseMinute < 10 ? `0${sunriseMinute}` : sunriseMinute
+          }`;
+          this.sunset = `${sunsetHour}:${
+            sunsetMinute < 10 ? `0${sunsetMinute}` : sunsetMinute
+          }`;
+          // this.sunset = `${sunsetHour}:${sunsetMinute}`;
+        })
+        .catch(err => console.error(err));
+    },
+    handleKeyPress(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        this.getWeather();
+      }
+    },
+  },
+};
+</script>
