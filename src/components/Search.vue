@@ -3,7 +3,7 @@
     <form
       class="m-4 flex flex-col"
       @submit.prevent="getWeather"
-      @keypress="handleKeyPress"
+      @keyup.enter="getWeather"
     >
       <input
         type="text"
@@ -96,7 +96,8 @@ export default {
         .then(data => {
           this.lat = data[0].lat;
           this.lon = data[0].lon;
-        });
+        })
+        .catch(err => console.error(err));
     },
     async getWeather() {
       await this.getCoordinates();
@@ -128,11 +129,6 @@ export default {
           }`;
         })
         .catch(err => console.error(err));
-    },
-    handleKeyPress(e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        this.getWeather();
-      }
     },
   },
 };
