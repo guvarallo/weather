@@ -36,7 +36,7 @@
       Today's highest: {{ Math.round(weatherData.main.temp_max - 273.15) }}°C
     </p>
     <span v-on:click="isVisible = !isVisible">More info</span>
-    <div v-if="isVisible">
+    <div v-show="isVisible">
       <p>
         Wind speed: {{ Math.round((weatherData.wind.speed * 18) / 5) }} km/h
       </p>
@@ -93,14 +93,17 @@ export default {
           this.weatherData = data;
           this.iconUrl = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
 
-          const sunriseDate = new Date(data.sys.sunrise * 1000);
-          const sunsetDate = new Date(data.sys.sunset * 1000);
+          const sunriseDate = new Date(
+            (data.sys.sunrise + data.timezone) * 1000
+          );
+          const sunsetDate = new Date((data.sys.sunset + data.timezone) * 1000);
           console.log(data.timezone);
           console.log(data.sys.sunrise);
-          const sunriseHour = sunriseDate.getHours();
-          const sunsetHour = sunsetDate.getHours();
-          const sunriseMinute = sunriseDate.getMinutes();
-          const sunsetMinute = sunsetDate.getMinutes();
+          console.log(data.sys.sunset);
+          const sunriseHour = sunriseDate.getUTCHours();
+          const sunsetHour = sunsetDate.getUTCHours();
+          const sunriseMinute = sunriseDate.getUTCMinutes();
+          const sunsetMinute = sunsetDate.getUTCMinutes();
           // this.sunrise = `${sunriseHour}:${sunriseMinute}`;
           this.sunrise = `${sunriseHour}:${
             sunriseMinute < 10 ? `0${sunriseMinute}` : sunriseMinute
