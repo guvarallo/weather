@@ -51,84 +51,61 @@
 </template>
 
 <script>
+import api from "../services/api";
+
 export default {
   data() {
     return {
       city: "",
-      lat: "",
-      lon: "",
       weatherData: {},
       iconUrl: "",
-      isLoading: false,
-      isVisible: false,
       sunrise: "",
       sunset: "",
+      isVisible: false,
+      // isLoading: false,
     };
   },
   async beforeMount() {
-    const getUserPosition = () => {
-      return new Promise(function(resolve, reject) {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-    };
-    const data = await getUserPosition();
-    const lat = data.coords.latitude;
-    const lon = data.coords.longitude;
-
-    const url =
-      "https://us1.locationiq.com/v1/reverse.php?key=pk.0eae67ccc5c0431281c047f921253dbe&lat=" +
-      lat +
-      "&lon=" +
-      lon +
-      "&format=json";
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => (this.city = data.address.city))
-      .catch(err => console.error(err));
+    try {
+      const url = await api.getUserPosition();
+      const res = await fetch(url);
+      const data = await res.json();
+      this.city = data.address.city;
+    } catch (err) {
+      console.error(err);
+    }
   },
   methods: {
-    getCoordinates() {
+    // As we need this.city, it's better to leave getCoordinates() here instead
+    // of extracting to the api.js file
+    async getCoordinates() {
       const url = "https://us1.locationiq.com/v1/search.php";
       const key = "pk.0eae67ccc5c0431281c047f921253dbe";
-      return fetch(`${url}?key=${key}&q=${this.city}&format=json`)
-        .then(res => res.json())
-        .then(data => {
-          this.lat = data[0].lat;
-          this.lon = data[0].lon;
-        })
-        .catch(err => console.error(err));
+      let lat, lon;
+      try {
+        const res = await fetch(`${url}?key=${key}&q=${this.city}&format=json`);
+        const data = await res.json();
+        lat = data[0].lat;
+        lon = data[0].lon;
+        return [lat, lon];
+      } catch (err) {
+        console.error(err);
+      }
     },
     async getWeather() {
-      await this.getCoordinates();
-      const url = "https://api.openweathermap.org/data/2.5/onecall";
-      const key = "7ac325fd18f5ce43cc1cc62f3e3da84f";
-      return fetch(
-        `${url}?lat=${this.lat}&lon=${this.lon}&exclude=alerts&appid=${key}`
-      )
-        .then(res => res.json())
-        .then(data => {
-          this.weatherData = data;
-          this.iconUrl = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`;
-
-          const sunriseDate = new Date(
-            (data.current.sunrise + data.timezone_offset) * 1000
-          );
-          const sunsetDate = new Date(
-            (data.current.sunset + data.timezone_offset) * 1000
-          );
-          const sunriseHour = sunriseDate.getUTCHours();
-          const sunsetHour = sunsetDate.getUTCHours();
-          const sunriseMinute = sunriseDate.getUTCMinutes();
-          const sunsetMinute = sunsetDate.getUTCMinutes();
-          this.sunrise = `${sunriseHour}:${
-            sunriseMinute < 10 ? `0${sunriseMinute}` : sunriseMinute
-          }`;
-          this.sunset = `${sunsetHour}:${
-            sunsetMinute < 10 ? `0${sunsetMinute}` : sunsetMinute
-          }`;
-        })
-        .catch(err => console.error(err));
+      try {
+        const [lat, lon] = await this.getCoordinates();
+        const [weatherData, iconUrl, sunrise, sunset] = await api.getWeather(
+          lat,
+          lon
+        );
+        this.weatherData = weatherData;
+        this.iconUrl = iconUrl;
+        this.sunrise = sunrise;
+        this.sunset = sunset;
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 };
