@@ -12,13 +12,19 @@
         placeholder="Enter the city name"
       />
       <button
+        v-if="!isLoading"
         class="rounded transition duration-500 ease-in-out text-white bg-blue-600 hover:bg-red-600 transform p-3 mt-3"
       >
         Search
       </button>
+      <button v-else class="rounded text-white bg-gray-600 p-3 mt-3" disabled>
+        Loading
+      </button>
+      <div v-if="isLoading" class="lds-circle text-center mt-14">
+        <div></div>
+      </div>
     </form>
   </div>
-
   <div
     class="flex justify-center items-center flex-col mt-10"
     v-if="Object.keys(weatherData).length !== 0"
@@ -62,7 +68,7 @@ export default {
       sunrise: "",
       sunset: "",
       isVisible: false,
-      // isLoading: false,
+      isLoading: false,
     };
   },
   async beforeMount() {
@@ -93,6 +99,7 @@ export default {
       }
     },
     async getWeather() {
+      this.isLoading = true;
       try {
         const [lat, lon] = await this.getCoordinates();
         const [weatherData, iconUrl, sunrise, sunset] = await api.getWeather(
@@ -103,10 +110,44 @@ export default {
         this.iconUrl = iconUrl;
         this.sunrise = sunrise;
         this.sunset = sunset;
+        this.isLoading = false;
       } catch (err) {
         console.error(err);
+        this.isLoading = false;
       }
     },
   },
 };
 </script>
+
+<style>
+.lds-circle {
+  display: inline-block;
+  transform: translateZ(1px);
+}
+.lds-circle > div {
+  display: inline-block;
+  width: 164px;
+  height: 164px;
+  margin: 8px;
+  border-radius: 50%;
+  background: #2563eb;
+  animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+@keyframes lds-circle {
+  0%,
+  100% {
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(1800deg);
+    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+  }
+  100% {
+    transform: rotateY(3600deg);
+  }
+}
+</style>
