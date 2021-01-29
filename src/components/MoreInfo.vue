@@ -2,13 +2,13 @@
   <span
     v-if="!isVisible"
     @click="isVisible = !isVisible"
-    class="pointer text-md text-indigo-500 font-bold text-center"
+    class="pointer text-md text-blue-600 font-bold text-center"
     >Click here for more info</span
   >
   <span
     v-else
     @click="isVisible = !isVisible"
-    class="pointer text-md text-indigo-500 font-bold text-center"
+    class="pointer text-md text-blue-600 font-bold text-center"
     >Click here for less info</span
   >
   <div v-show="isVisible" class="w-full mt-5">
