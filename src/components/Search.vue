@@ -35,17 +35,20 @@
     :city="city"
     :iconUrl="iconUrl"
   />
+  <Forecast :weatherData="weatherData" />
 </template>
 
 <script>
 import api from "../services/api";
 import Error from "./Error";
 import Weather from "./Weather";
+import Forecast from "./Forecast";
 
 export default {
   components: {
     Error,
     Weather,
+    Forecast,
   },
   data() {
     return {
