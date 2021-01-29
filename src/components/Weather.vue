@@ -8,7 +8,7 @@
       style="max-width: 500px"
     >
       <div class="w-full pt-1 pb-5">
-        <p class="text-2xl text-gray-600 px-5">City of {{ city }}</p>
+        <p class="text-4xl text-gray-600 px-5 mb-3">City of {{ city }}</p>
         <p class="text-sm text-gray-600 px-5">
           Local time now: {{ localTime }}h
         </p>
