@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center mt-8">
+  <div class="flex justify-center mt-8 mb-8">
     <form
       class="m-4 flex flex-col"
       @submit.prevent="getWeather"
@@ -13,7 +13,7 @@
       />
       <button
         v-if="!isLoading"
-        class="rounded transition duration-500 ease-in-out text-white bg-blue-600 hover:bg-red-600 transform p-3 mt-3"
+        class="rounded transition duration-500 ease-in-out text-white bg-blue-600 hover:bg-purple-600 transform p-3 mt-3"
       >
         Search
       </button>
@@ -124,7 +124,7 @@ export default {
   height: 164px;
   margin: 8px;
   border-radius: 50%;
-  background: #2563eb;
+  background: linear-gradient(#7c3aed, #2563eb);
   animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="Object.keys(weatherData).length !== 0 && !isLoading"
-    class="min-w-screen min-h-half bg-gray-200 flex items-center justify-center px-5 py-5"
+    class="min-w-screen min-h-half flex items-center justify-center px-5 py-5 bg-gradient-to-b from-purple-600 to-blue-600"
   >
     <div
       class="w-full mx-auto rounded-lg bg-white shadow-lg px-5 pt-5 pb-10 text-gray-800"
