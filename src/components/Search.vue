@@ -13,7 +13,7 @@
       />
       <button
         v-if="!isLoading"
-        class="rounded transition duration-500 ease-in-out text-white bg-blue-600 hover:bg-purple-600 transform p-3 mt-3"
+        class="rounded transition duration-300 ease-in-out text-white bg-blue-600 hover:bg-purple-600 transform p-3 mt-3"
       >
         Search
       </button>
