@@ -6,8 +6,8 @@
       @keyup.enter="getWeather"
     >
       <input
-        type="text"
-        v-model="input"
+        type="search"
+        v-model.lazy="city"
         class="text-gray-800 border-gray-200 border rounded p-3 text-center "
         placeholder="Enter the city name"
       />
@@ -50,7 +50,6 @@ export default {
   data() {
     return {
       city: "",
-      input: "",
       weatherData: {},
       iconUrl: "",
       sunrise: "",
@@ -66,7 +65,6 @@ export default {
       const res = await fetch(url);
       const data = await res.json();
       this.city = data.address.city;
-      this.input = data.address.city;
       this.getWeather();
     } catch (err) {
       console.log(err);
@@ -81,9 +79,7 @@ export default {
       const key = "pk.0eae67ccc5c0431281c047f921253dbe";
       let lat, lon;
       try {
-        const res = await fetch(
-          `${url}?key=${key}&q=${this.input}&format=json`
-        );
+        const res = await fetch(`${url}?key=${key}&q=${this.city}&format=json`);
         const data = await res.json();
         lat = data[0].lat;
         lon = data[0].lon;
@@ -96,6 +92,7 @@ export default {
     async getWeather() {
       this.isLoading = true;
       this.error = "";
+      this.weatherData = {};
       try {
         const [lat, lon] = await this.getCoordinates();
         const [
@@ -111,7 +108,6 @@ export default {
         this.sunset = sunset;
         this.localTime = localTime;
         this.isLoading = false;
-        this.input = "";
       } catch (err) {
         console.error(err);
         this.isLoading = false;
