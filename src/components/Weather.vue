@@ -32,7 +32,7 @@
           {{ Math.round(weatherData.daily[0].temp.max - 273.15) }}°C
         </p>
       </div>
-      <div v-if="weatherData" class="w-full flex flex-col justify-center">
+      <div class="w-full flex flex-col justify-center">
         <MoreInfo
           :weatherData="weatherData"
           :sunrise="sunrise"
