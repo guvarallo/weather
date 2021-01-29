@@ -20,7 +20,7 @@ const api = {
   async getWeather(lat, lon) {
     const url = "https://api.openweathermap.org/data/2.5/onecall";
     const key = "7ac325fd18f5ce43cc1cc62f3e3da84f";
-    let weatherData, iconUrl, sunrise, sunset;
+    let weatherData, iconUrl, sunrise, sunset, localTime;
     try {
       const res = await fetch(
         `${url}?lat=${lat}&lon=${lon}&exclude=alerts&appid=${key}`
@@ -31,23 +31,31 @@ const api = {
       iconUrl = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`;
 
       //Calculate timezone before setting sunrise/sunset times
-      const sunriseDate = new Date(
+      const sunriseTimeData = new Date(
         (data.current.sunrise + data.timezone_offset) * 1000
       );
-      const sunsetDate = new Date(
+      const sunsetTimeData = new Date(
         (data.current.sunset + data.timezone_offset) * 1000
       );
-      const sunriseHour = sunriseDate.getUTCHours();
-      const sunsetHour = sunsetDate.getUTCHours();
-      const sunriseMinute = sunriseDate.getUTCMinutes();
-      const sunsetMinute = sunsetDate.getUTCMinutes();
+      const localTimeData = new Date(
+        (data.current.dt + data.timezone_offset) * 1000
+      );
+      const sunriseHour = sunriseTimeData.getUTCHours();
+      const sunsetHour = sunsetTimeData.getUTCHours();
+      const localTimeHour = localTimeData.getUTCHours();
+      const sunriseMinute = sunriseTimeData.getUTCMinutes();
+      const sunsetMinute = sunsetTimeData.getUTCMinutes();
+      const localTimeMinute = localTimeData.getUTCMinutes();
       sunrise = `${sunriseHour}:${
         sunriseMinute < 10 ? `0${sunriseMinute}` : sunriseMinute
       }`;
       sunset = `${sunsetHour}:${
         sunsetMinute < 10 ? `0${sunsetMinute}` : sunsetMinute
       }`;
-      return [weatherData, iconUrl, sunrise, sunset];
+      localTime = `${localTimeHour}:${
+        localTimeMinute < 10 ? `0${localTimeMinute}` : localTimeMinute
+      }`;
+      return [weatherData, iconUrl, sunrise, sunset, localTime];
     } catch (err) {
       return err;
     }

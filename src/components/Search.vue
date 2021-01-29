@@ -7,7 +7,7 @@
     >
       <input
         type="text"
-        v-model="city"
+        v-model.lazy="city"
         class="text-gray-800 border-gray-200 border rounded p-3 text-center "
         placeholder="Enter the city name"
       />
@@ -25,41 +25,25 @@
       </div>
     </form>
   </div>
-  <div
-    class="flex justify-center items-center flex-col mt-10"
-    v-if="Object.keys(weatherData).length !== 0"
-  >
-    <h1>City of {{ city }}</h1>
-    <div class="flex justify-center flex-col items-center">
-      <img :src="iconUrl" alt="weather icon" class="w-14" />
-      <p class="">{{ Math.round(weatherData.current.temp - 273.15) }}°C</p>
-    </div>
-
-    <p class="">
-      Today's lowest: {{ Math.round(weatherData.daily[0].temp.min - 273.15) }}°C
-    </p>
-    <p class="">
-      Today's highest:
-      {{ Math.round(weatherData.daily[0].temp.max - 273.15) }}°C
-    </p>
-    <span v-on:click="isVisible = !isVisible">More info</span>
-    <div v-show="isVisible">
-      <p>
-        Wind speed:
-        {{ Math.round((weatherData.current.wind_speed * 18) / 5) }} km/h
-      </p>
-      <p>Humidity: {{ weatherData.current.humidity }}%</p>
-      <p>Pressure: {{ weatherData.current.pressure }} mb</p>
-      <p>Sunrise: {{ sunrise }}h</p>
-      <p>Sunset: {{ sunset }}h</p>
-    </div>
-  </div>
+  <Weather
+    :weatherData="weatherData"
+    :localTime="localTime"
+    :sunrise="sunrise"
+    :sunset="sunset"
+    :isLoading="isLoading"
+    :city="city"
+    :iconUrl="iconUrl"
+  />
 </template>
 
 <script>
 import api from "../services/api";
+import Weather from "./Weather";
 
 export default {
+  components: {
+    Weather,
+  },
   data() {
     return {
       city: "",
@@ -67,7 +51,7 @@ export default {
       iconUrl: "",
       sunrise: "",
       sunset: "",
-      isVisible: false,
+      localTime: "",
       isLoading: false,
     };
   },
@@ -102,14 +86,18 @@ export default {
       this.isLoading = true;
       try {
         const [lat, lon] = await this.getCoordinates();
-        const [weatherData, iconUrl, sunrise, sunset] = await api.getWeather(
-          lat,
-          lon
-        );
+        const [
+          weatherData,
+          iconUrl,
+          sunrise,
+          sunset,
+          localTime,
+        ] = await api.getWeather(lat, lon);
         this.weatherData = weatherData;
         this.iconUrl = iconUrl;
         this.sunrise = sunrise;
         this.sunset = sunset;
+        this.localTime = localTime;
         this.isLoading = false;
       } catch (err) {
         console.error(err);
@@ -121,10 +109,15 @@ export default {
 </script>
 
 <style>
+.pointer {
+  cursor: pointer;
+}
+
 .lds-circle {
   display: inline-block;
   transform: translateZ(1px);
 }
+
 .lds-circle > div {
   display: inline-block;
   width: 164px;
@@ -134,6 +127,7 @@ export default {
   background: #2563eb;
   animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
+
 @keyframes lds-circle {
   0%,
   100% {
