@@ -1,5 +1,8 @@
 <template>
-  <div class="min-w-screen flex items-center justify-center px-5 py-5">
+  <div
+    v-if="Object.keys(weatherData).length !== 0 && !isLoading"
+    class="min-w-screen flex items-center justify-center px-5 py-5 mt-14"
+  >
     <div
       class="w-full mx-auto rounded-lg bg-gradient-to-b from-purple-600 to-blue-600 shadow-lg px-5 pt-5 pb-10 text-white"
     >
@@ -20,7 +23,7 @@
 <script>
 export default {
   props: {
-    weatherDate: Object,
+    weatherData: Object,
   },
 };
 </script>

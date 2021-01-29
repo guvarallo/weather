@@ -132,8 +132,8 @@ export default {
 
 .lds-circle > div {
   display: inline-block;
-  width: 164px;
-  height: 164px;
+  width: 500px;
+  height: 500px;
   margin: 8px;
   border-radius: 50%;
   background: linear-gradient(#7c3aed, #2563eb);
