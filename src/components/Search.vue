@@ -7,7 +7,7 @@
     >
       <input
         type="text"
-        v-model.lazy="city"
+        v-model="input"
         class="text-gray-800 border-gray-200 border rounded p-3 text-center "
         placeholder="Enter the city name"
       />
@@ -17,7 +17,7 @@
       >
         Search
       </button>
-      <button v-else class="rounded text-white bg-gray-600 p-3 mt-3" disabled>
+      <button v-else class="rounded text-white bg-gray-400 p-3 mt-3" disabled>
         Loading
       </button>
       <div v-if="isLoading" class="lds-circle text-center mt-14">
@@ -25,6 +25,7 @@
       </div>
     </form>
   </div>
+  <Error v-if="error.length > 0" :error="error" />
   <Weather
     :weatherData="weatherData"
     :localTime="localTime"
@@ -38,21 +39,25 @@
 
 <script>
 import api from "../services/api";
+import Error from "./Error";
 import Weather from "./Weather";
 
 export default {
   components: {
+    Error,
     Weather,
   },
   data() {
     return {
       city: "",
+      input: "",
       weatherData: {},
       iconUrl: "",
       sunrise: "",
       sunset: "",
       localTime: "",
       isLoading: false,
+      error: "",
     };
   },
   async beforeMount() {
@@ -61,8 +66,11 @@ export default {
       const res = await fetch(url);
       const data = await res.json();
       this.city = data.address.city;
+      this.input = data.address.city;
+      this.getWeather();
     } catch (err) {
-      console.error(err);
+      console.log(err);
+      this.error = err;
     }
   },
   methods: {
@@ -73,17 +81,21 @@ export default {
       const key = "pk.0eae67ccc5c0431281c047f921253dbe";
       let lat, lon;
       try {
-        const res = await fetch(`${url}?key=${key}&q=${this.city}&format=json`);
+        const res = await fetch(
+          `${url}?key=${key}&q=${this.input}&format=json`
+        );
         const data = await res.json();
         lat = data[0].lat;
         lon = data[0].lon;
         return [lat, lon];
       } catch (err) {
         console.error(err);
+        this.error = "City not found. Please type a correct city name";
       }
     },
     async getWeather() {
       this.isLoading = true;
+      this.error = "";
       try {
         const [lat, lon] = await this.getCoordinates();
         const [
@@ -99,6 +111,7 @@ export default {
         this.sunset = sunset;
         this.localTime = localTime;
         this.isLoading = false;
+        this.input = "";
       } catch (err) {
         console.error(err);
         this.isLoading = false;

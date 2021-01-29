@@ -14,7 +14,7 @@ const api = {
         "&format=json";
       return url;
     } catch (err) {
-      return err;
+      throw "Please allow access to your location for weather information in your city";
     }
   },
   async getWeather(lat, lon) {

@@ -1,14 +1,16 @@
 <template>
-  <h1 class="text-center text-gray-900 text-5xl mt-3">Weather</h1>
+  <Header />
   <Search />
 </template>
 
 <script>
+import Header from "./Header";
 import Search from "./Search";
 
 export default {
   name: "App",
   components: {
+    Header,
     Search,
   },
 };
