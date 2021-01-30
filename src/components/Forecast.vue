@@ -6,8 +6,10 @@
     <div
       class="w-full mx-auto rounded-lg bg-gradient-to-b from-purple-600 to-blue-600 shadow-lg px-5 pt-5 pb-10 text-white"
     >
-      <p class="text-4xl text-white px-5 mb-8">Next 7 Days</p>
-      <div class="grid grid-cols-7 text-center">
+      <p class="forecast-title text-4xl text-white px-5 mb-8">
+        Next 7 days in {{ city }}
+      </p>
+      <div class="forecast-container grid grid-cols-7 text-center">
         <div
           v-for="data in daily"
           :key="data.dt"
@@ -15,14 +17,14 @@
           style="height: 200px;"
         >
           <div>
-            <p class="temp text-xl text-gray-600 text-center">
+            <p class="forecast-weekday temp text-xl text-gray-600 text-center">
               {{
                 new Date(data.dt * 1000).toLocaleDateString("en-US", {
                   weekday: "short",
                 })
               }}
             </p>
-            <p class="temp text-md text-gray-600 text-center">
+            <p class="forecast-date temp text-md text-gray-600 text-center">
               {{
                 new Date(data.dt * 1000).toLocaleDateString("en-US", {
                   day: "numeric",
@@ -31,7 +33,7 @@
               }}
             </p>
           </div>
-          <p class="temp text-2xl text-gray-600 text-center mt-3">
+          <p class="forecast-temp temp text-2xl text-gray-600 text-center mt-3">
             {{ Math.round(data.temp.day - 273.15) }}°C
           </p>
           <div>
@@ -40,7 +42,9 @@
               alt="weather icon"
               class="icon text-white text-center"
             />
-            <p class="temp text-sm text-gray-600 text-center">
+            <p
+              class="forecast-conditions temp text-sm text-gray-600 text-center"
+            >
               {{ data.weather[0].main }}
             </p>
           </div>
@@ -56,6 +60,7 @@ export default {
     weatherData: Object,
     isLoading: Boolean,
     daily: Array,
+    city: String,
   },
   methods: {
     getIcon(icon) {
@@ -64,3 +69,24 @@ export default {
   },
 };
 </script>
+
+<style>
+@media (max-width: 600px) {
+  .forecast-container {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    width: 250px !important;
+    margin: auto !important;
+  }
+  .forecast-title,
+  .forecast-weekday {
+    font-size: 1.5rem !important;
+  }
+  .forecast-date,
+  .forecast-conditions {
+    font-size: 1rem !important;
+  }
+  .forecast-temp {
+    font-size: 1.8rem !important;
+  }
+}
+</style>

@@ -35,7 +35,12 @@
     :city="city"
     :iconUrl="iconUrl"
   />
-  <Forecast :weatherData="weatherData" :isLoading="isLoading" :daily="daily" />
+  <Forecast
+    :weatherData="weatherData"
+    :isLoading="isLoading"
+    :daily="daily"
+    :city="city"
+  />
 </template>
 
 <script>
@@ -97,6 +102,7 @@ export default {
       this.isLoading = true;
       this.error = "";
       this.weatherData = {};
+      this.daily = [];
       try {
         const [lat, lon] = await this.getCoordinates();
         const [
@@ -157,6 +163,13 @@ export default {
   }
   100% {
     transform: rotateY(3600deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .lds-circle > div {
+    width: 350px !important;
+    height: 350px !important;
   }
 }
 </style>
