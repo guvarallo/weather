@@ -24,6 +24,7 @@
 export default {
   props: {
     weatherData: Object,
+    isLoading: Boolean,
   },
 };
 </script>

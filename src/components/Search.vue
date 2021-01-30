@@ -26,7 +26,7 @@
     </form>
   </div>
   <Error v-if="error.length > 0" :error="error" />
-  <Weather
+  <Main
     :weatherData="weatherData"
     :localTime="localTime"
     :sunrise="sunrise"
@@ -35,19 +35,19 @@
     :city="city"
     :iconUrl="iconUrl"
   />
-  <Forecast :weatherData="weatherData" />
+  <Forecast :weatherData="weatherData" :isLoading="isLoading" />
 </template>
 
 <script>
 import api from "../services/api";
 import Error from "./Error";
-import Weather from "./Weather";
+import Main from "./Weather/Main";
 import Forecast from "./Forecast";
 
 export default {
   components: {
     Error,
-    Weather,
+    Main,
     Forecast,
   },
   data() {
