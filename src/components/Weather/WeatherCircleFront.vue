@@ -7,7 +7,7 @@
       >
     </p>
   </div>
-  <div class="container lex flex-col justify-evenly w-ball h-ball">
+  <div class="container flex flex-col justify-evenly w-ball h-ball">
     <div>
       <p class="city text-5xl text-white px-5 mb-3 text-center">
         {{ city }}
@@ -77,12 +77,10 @@ export default {
   .container {
     width: 350px !important;
     height: 350px !important;
-    margin-top: 20px !important;
   }
   .city,
   .temp {
     font-size: 2rem !important;
-    margin-top: 20px !important;
   }
   .time,
   .condition,
