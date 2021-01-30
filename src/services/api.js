@@ -20,7 +20,7 @@ const api = {
   async getWeather(lat, lon) {
     const url = "https://api.openweathermap.org/data/2.5/onecall";
     const key = "7ac325fd18f5ce43cc1cc62f3e3da84f";
-    let weatherData, iconUrl, sunrise, sunset, localTime;
+    let weatherData, daily, iconUrl, sunrise, sunset, localTime;
     try {
       const res = await fetch(
         `${url}?lat=${lat}&lon=${lon}&exclude=alerts&appid=${key}`
@@ -28,6 +28,8 @@ const api = {
       const data = await res.json();
 
       weatherData = data;
+      data.daily.shift(); //remove first item as it's today's date
+      daily = data.daily;
       iconUrl = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`;
 
       //Calculate timezone before setting sunrise/sunset times
@@ -55,7 +57,7 @@ const api = {
       localTime = `${localTimeHour}:${
         localTimeMinute < 10 ? `0${localTimeMinute}` : localTimeMinute
       }`;
-      return [weatherData, iconUrl, sunrise, sunset, localTime];
+      return [weatherData, daily, iconUrl, sunrise, sunset, localTime];
     } catch (err) {
       return err;
     }

@@ -35,7 +35,7 @@
     :city="city"
     :iconUrl="iconUrl"
   />
-  <Forecast :weatherData="weatherData" :isLoading="isLoading" />
+  <Forecast :weatherData="weatherData" :isLoading="isLoading" :daily="daily" />
 </template>
 
 <script>
@@ -54,6 +54,7 @@ export default {
     return {
       city: "",
       weatherData: {},
+      daily: [],
       iconUrl: "",
       sunrise: "",
       sunset: "",
@@ -100,12 +101,14 @@ export default {
         const [lat, lon] = await this.getCoordinates();
         const [
           weatherData,
+          daily,
           iconUrl,
           sunrise,
           sunset,
           localTime,
         ] = await api.getWeather(lat, lon);
         this.weatherData = weatherData;
+        this.daily = daily;
         this.iconUrl = iconUrl;
         this.sunrise = sunrise;
         this.sunset = sunset;
