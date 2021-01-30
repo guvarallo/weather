@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <p class="text-center text-white w-20">
+  <div class="flex flex-col items-center">
+    <p class="max text-center text-white w-20">
       Min
+    </p>
+    <p>
       <strong
         >{{ Math.round(weatherData.daily[0].temp.min - 273.15) }}°C</strong
       >
@@ -37,17 +39,19 @@
         >
       </p>
     </div>
-    <div class="w-full flex flex-col justify-center">
+    <div class="more-info w-full flex flex-col justify-center">
       <span
         @click="flip"
-        class="more pointer text-md text-white font-bold text-center mt-6"
+        class="more-info pointer text-md text-white font-bold text-center mt-6 mb-7"
         >Click here for more info</span
       >
     </div>
   </div>
-  <div>
-    <p class="text-center text-white w-20">
+  <div class="flex flex-col items-center">
+    <p class="max text-center text-white w-20">
       Max
+    </p>
+    <p>
       <strong
         >{{ Math.round(weatherData.daily[0].temp.max - 273.15) }}°C</strong
       >
@@ -80,12 +84,15 @@ export default {
   }
   .city,
   .temp {
-    font-size: 2rem !important;
+    font-size: 1.8rem !important;
   }
   .time,
   .condition,
-  .feels {
-    font-size: 1rem !important;
+  .feels,
+  .min,
+  .max,
+  .more-info {
+    font-size: 0.9rem !important;
   }
 }
 </style>

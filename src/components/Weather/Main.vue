@@ -5,7 +5,7 @@
   >
     <div class="circle">
       <div
-        class="circle_face flex items-center mx-auto rounded-full bg-gradient-to-b from-purple-600 to-blue-600 shadow-lg w-ball h-ball text-white p-6"
+        class="circle_face flex items-center mx-auto rounded-full bg-gradient-to-b from-purple-600 to-blue-600 shadow-lg w-ball h-ball text-white p-2"
       >
         <WeatherCircleFront
           @flip="isFlipped"
@@ -16,7 +16,7 @@
         />
       </div>
       <div
-        class="circle_face circle_back flex items-center mx-auto rounded-full bg-gradient-to-b from-blue-600 to-purple-600 shadow-lg w-ball h-ball text-white p-6"
+        class="circle_face circle_back flex items-center mx-auto rounded-full bg-gradient-to-b from-blue-600 to-purple-600 shadow-lg w-ball h-ball text-white p-2"
       >
         <WeatherCircleBack
           @flip="isFlipped"
