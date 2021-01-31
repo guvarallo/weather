@@ -6,60 +6,47 @@ const api = {
       });
       const lat = userPos.coords.latitude;
       const lon = userPos.coords.longitude;
-      const url =
+      const res = await fetch(
         "https://us1.locationiq.com/v1/reverse.php?key=pk.0eae67ccc5c0431281c047f921253dbe&lat=" +
-        lat +
-        "&lon=" +
-        lon +
-        "&format=json";
-      return url;
+          lat +
+          "&lon=" +
+          lon +
+          "&format=json"
+      );
+      const data = await res.json();
+      return data;
     } catch (err) {
-      throw "Please allow access to your location for weather information in your city";
+      console.error(err);
+      throw "Please allow access to your location for weather information in your city.";
     }
   },
   async getWeather(lat, lon) {
     const url = "https://api.openweathermap.org/data/2.5/onecall";
     const key = "7ac325fd18f5ce43cc1cc62f3e3da84f";
-    let weatherData, daily, iconUrl, sunrise, sunset, localTime;
     try {
       const res = await fetch(
         `${url}?lat=${lat}&lon=${lon}&exclude=alerts&appid=${key}`
       );
       const data = await res.json();
-
-      weatherData = data;
-      data.daily.shift(); //remove first item as it's today's date
-      daily = data.daily;
-      iconUrl = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`;
-
-      //Calculate timezone before setting sunrise/sunset times
-      const sunriseTimeData = new Date(
-        (data.current.sunrise + data.timezone_offset) * 1000
-      );
-      const sunsetTimeData = new Date(
-        (data.current.sunset + data.timezone_offset) * 1000
-      );
-      const localTimeData = new Date(
-        (data.current.dt + data.timezone_offset) * 1000
-      );
-      const sunriseHour = sunriseTimeData.getUTCHours();
-      const sunsetHour = sunsetTimeData.getUTCHours();
-      const localTimeHour = localTimeData.getUTCHours();
-      const sunriseMinute = sunriseTimeData.getUTCMinutes();
-      const sunsetMinute = sunsetTimeData.getUTCMinutes();
-      const localTimeMinute = localTimeData.getUTCMinutes();
-      sunrise = `${sunriseHour}:${
-        sunriseMinute < 10 ? `0${sunriseMinute}` : sunriseMinute
-      }`;
-      sunset = `${sunsetHour}:${
-        sunsetMinute < 10 ? `0${sunsetMinute}` : sunsetMinute
-      }`;
-      localTime = `${localTimeHour}:${
-        localTimeMinute < 10 ? `0${localTimeMinute}` : localTimeMinute
-      }`;
-      return [weatherData, daily, iconUrl, sunrise, sunset, localTime];
+      return data;
     } catch (err) {
-      return err;
+      console.error(err);
+      throw "City not found, please type a correct city name.";
+    }
+  },
+  async getCoordinates(city) {
+    const url = "https://us1.locationiq.com/v1/search.php";
+    const key = "pk.0eae67ccc5c0431281c047f921253dbe";
+    let lat, lon;
+    try {
+      const res = await fetch(`${url}?key=${key}&q=${city}&format=json`);
+      const data = await res.json();
+      lat = data[0].lat;
+      lon = data[0].lon;
+      return [lat, lon];
+    } catch (err) {
+      console.error(err);
+      throw "City not found, please type a correct city name.";
     }
   },
 };

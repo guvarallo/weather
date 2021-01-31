@@ -19,7 +19,7 @@
       <div class="alert-title font-semibold text-lg text-yellow-800">
         Oops!
       </div>
-      <div class="alert-description text-sm text-yellow-600">{{ error }}.</div>
+      <div class="alert-description text-sm text-yellow-600">{{ error }}</div>
     </div>
   </div>
 </template>

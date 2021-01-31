@@ -69,61 +69,69 @@ export default {
     };
   },
   async beforeMount() {
+    this.isLoading = true;
     try {
-      const url = await api.getUserPosition();
-      const res = await fetch(url);
-      const data = await res.json();
-      this.city = data.address.city;
+      const userPositionData = await api.getUserPosition();
+      this.city = userPositionData.address.city;
+
       this.getWeather();
     } catch (err) {
-      console.log(err);
+      this.isLoading = false;
       this.error = err;
     }
   },
   methods: {
-    // As we need this.city, it's better to leave getCoordinates() here instead
-    // of extracting to the api.js file
-    async getCoordinates() {
-      const url = "https://us1.locationiq.com/v1/search.php";
-      const key = "pk.0eae67ccc5c0431281c047f921253dbe";
-      let lat, lon;
-      try {
-        const res = await fetch(`${url}?key=${key}&q=${this.city}&format=json`);
-        const data = await res.json();
-        lat = data[0].lat;
-        lon = data[0].lon;
-        return [lat, lon];
-      } catch (err) {
-        console.error(err);
-        this.error = "City not found. Please type a correct city name";
-      }
-    },
     async getWeather() {
+      if (this.city === "") return;
+
       this.isLoading = true;
       this.error = "";
       this.weatherData = {};
       this.daily = [];
+
       try {
-        const [lat, lon] = await this.getCoordinates();
-        const [
-          weatherData,
-          daily,
-          iconUrl,
-          sunrise,
-          sunset,
-          localTime,
-        ] = await api.getWeather(lat, lon);
-        this.weatherData = weatherData;
-        this.daily = daily;
-        this.iconUrl = iconUrl;
-        this.sunrise = sunrise;
-        this.sunset = sunset;
-        this.localTime = localTime;
-        this.isLoading = false;
+        const [lat, lon] = await api.getCoordinates(this.city);
+
+        const data = await api.getWeather(lat, lon);
+
+        this.weatherData = data;
+        this.handleWeatherData(data);
       } catch (err) {
-        console.error(err);
         this.isLoading = false;
+        this.error = err;
       }
+    },
+    handleWeatherData(data) {
+      data.daily.shift(); //remove first item as it's today's date
+      this.daily = data.daily;
+      this.iconUrl = `http://openweathermap.org/img/w/${data.current.weather[0].icon}.png`;
+
+      //Calculate timezone before setting sunrise/sunset/localTime
+      const sunriseTimeData = new Date(
+        (data.current.sunrise + data.timezone_offset) * 1000
+      );
+      const sunsetTimeData = new Date(
+        (data.current.sunset + data.timezone_offset) * 1000
+      );
+      const localTimeData = new Date(
+        (data.current.dt + data.timezone_offset) * 1000
+      );
+      const sunriseHour = sunriseTimeData.getUTCHours();
+      const sunsetHour = sunsetTimeData.getUTCHours();
+      const localTimeHour = localTimeData.getUTCHours();
+      const sunriseMinute = sunriseTimeData.getUTCMinutes();
+      const sunsetMinute = sunsetTimeData.getUTCMinutes();
+      const localTimeMinute = localTimeData.getUTCMinutes();
+      this.sunrise = `${sunriseHour}:${
+        sunriseMinute < 10 ? `0${sunriseMinute}` : sunriseMinute
+      }`;
+      this.sunset = `${sunsetHour}:${
+        sunsetMinute < 10 ? `0${sunsetMinute}` : sunsetMinute
+      }`;
+      this.localTime = `${localTimeHour}:${
+        localTimeMinute < 10 ? `0${localTimeMinute}` : localTimeMinute
+      }`;
+      this.isLoading = false;
     },
   },
 };
