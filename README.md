@@ -1,6 +1,6 @@
 <h1 align="center">Weather</h1>
 
-<h3 align="center">A Vue.js app weather forecast using OpenWeather API.</h3>
+<h3 align="center">A Vue.js weather forecast app using OpenWeather API.</h3>
 
 ## Demo
 
