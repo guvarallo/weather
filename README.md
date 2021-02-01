@@ -10,7 +10,7 @@ Check it out live here: [Weather live demo](https://weather-098.netlify.app/).
 
 1. Clone this repo.
 2. Generate your own API Keys on OpenWeather, LocationIQ and Google APIs.
-3. Inside src/services, create a file named 'apiKey.js' and add the following:
+3. Inside src/services/, create a file named 'apiKeys.js' and add the following:
 
 ```
 export const LOCATION_IQ_KEY = "YOUR_API_KEY_HERE";
