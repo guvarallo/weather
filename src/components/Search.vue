@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { GOOGLE_KEY } from "../services/apiKeys";
 import api from "../services/api";
 import Error from "./Error";
 import Main from "./Weather/Main";
@@ -85,6 +86,18 @@ export default {
     }
   },
   mounted() {
+    window.checkAndAttachMapScript = function(callback) {
+      if (window.google) {
+        callback();
+        return true;
+      }
+
+      window.mapApiInitialized = callback;
+      let script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_KEY}&libraries=places,geometry&callback=mapApiInitialized`;
+      document.body.appendChild(script);
+    };
+
     window.checkAndAttachMapScript(this.initLocationSearch);
   },
   methods: {
