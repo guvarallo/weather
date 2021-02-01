@@ -1,24 +1,31 @@
-# weather
+<h1 align="center">Weather</h1>
 
-## Project setup
+<h3 align="center">A Vue.js app weather forecast using OpenWeather API.</h3>
+
+<div align="center">
+
+## Check it out live here:
+
+[Weather Demo](https://weather-098.netlify.app/)
+
+</div>
+
+## Getting Started
+
+1. Clone this repo
+2. Generate your own API Keys on OpenWeather, LocationIQ and Google APIs.
+3. Inside src/services, create a file named 'apiKey.js' and add the following:
+
 ```
-npm install
+export const LOCATION_IQ_KEY = "YOUR_API_KEY_HERE";
+export const OPEN_WEATHER_KEY = "YOUR_API_KEY_HERE";
+export const GOOGLE_KEY = "YOUR_API_KEY_HERE";
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+5. Run `npm install`
+6. Run `npm run serve`
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Built With
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- [Vue.js 3](https://vuejs.org/)
+- [Tailwind CSS](https://tailwindcss.com//)
