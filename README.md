@@ -4,6 +4,10 @@
 
 ## Demo
 
+![Weather Demo](src/assets/weather-demo.gif)
+
+## Live Demo
+
 Check it out live here: [Weather live demo](https://weather-098.netlify.app/).
 
 ## Getting Started
