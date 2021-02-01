@@ -80,6 +80,10 @@ export default {
       this.error = err;
     }
   },
+  // mounted() {
+  //   let gmapsScript = document.createElement('script');
+  //   gmapsScript.setAttribute('src', `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap`)
+  // },
   methods: {
     async getWeather() {
       if (this.city === "") return;
