@@ -6,8 +6,10 @@
       @keyup.enter="getWeather"
     >
       <input
-        type="search"
-        v-model.lazy="city"
+        type="text"
+        ref="search"
+        @click="this.inputCity = ''"
+        v-model="inputCity"
         class="text-gray-800 border-gray-200 border rounded p-3 text-center "
         placeholder="Enter the city name"
       />
@@ -57,6 +59,7 @@ export default {
   },
   data() {
     return {
+      inputCity: "",
       city: "",
       weatherData: {},
       daily: [],
@@ -72,6 +75,7 @@ export default {
     this.isLoading = true;
     try {
       const userPositionData = await api.getUserPosition();
+      this.inputCity = userPositionData.address.city;
       this.city = userPositionData.address.city;
 
       this.getWeather();
@@ -80,11 +84,26 @@ export default {
       this.error = err;
     }
   },
-  // mounted() {
-  //   let gmapsScript = document.createElement('script');
-  //   gmapsScript.setAttribute('src', `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap`)
-  // },
+  mounted() {
+    window.checkAndAttachMapScript(this.initLocationSearch);
+  },
   methods: {
+    initLocationSearch() {
+      let autocomplete = new window.google.maps.places.Autocomplete(
+        this.$refs.search
+      );
+      autocomplete.addListener(
+        "place_changed",
+        function() {
+          let place = autocomplete.getPlace();
+          if (place && place.address_components) {
+            this.inputCity = place.address_components[0].long_name;
+            console.log(place.address_components);
+            console.log(this.inputCity);
+          }
+        }.bind(this)
+      );
+    },
     async getWeather() {
       if (this.city === "") return;
 
@@ -94,7 +113,8 @@ export default {
       this.daily = [];
 
       try {
-        const [lat, lon] = await api.getCoordinates(this.city);
+        this.city = this.inputCity;
+        const [lat, lon] = await api.getCoordinates(this.inputCity);
 
         const data = await api.getWeather(lat, lon);
 

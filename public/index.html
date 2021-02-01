@@ -16,5 +16,19 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script>
+      window.checkAndAttachMapScript = function(callback) {
+        if (!!window.google) {
+          callback();
+          return true;
+        }
+
+        window.mapApiInitialized = callback;
+        let script = document.createElement("script");
+        script.src =
+          "https://maps.googleapis.com/maps/api/js?key=AIzaSyArh7ZRl-dZ75xyFIYL3fe-GyxT1msGElo&libraries=places,geometry&callback=mapApiInitialized";
+        document.body.appendChild(script);
+      };
+    </script>
   </body>
 </html>
