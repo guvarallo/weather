@@ -24,4 +24,4 @@ export const GOOGLE_KEY = "YOUR_API_KEY_HERE";
 ## Built With
 
 - [Vue.js v3.x](https://vuejs.org/)
-- [Tailwind CSS](https://tailwindcss.com//)
+- [Tailwind CSS](https://tailwindcss.com/)
