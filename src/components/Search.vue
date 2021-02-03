@@ -116,7 +116,7 @@ export default {
       );
     },
     async getWeather() {
-      if (this.city === "") return;
+      if (this.inputCity === "") return;
 
       this.isLoading = true;
       this.error = "";
