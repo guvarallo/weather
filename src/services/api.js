@@ -1,5 +1,7 @@
 import { LOCATION_IQ_KEY, OPEN_WEATHER_KEY } from "./apiKeys";
 
+const locationIqUrl = "https://us1.locationiq.com/v1/";
+
 const api = {
   async getUserPosition() {
     try {
@@ -9,7 +11,7 @@ const api = {
       const lat = userPos.coords.latitude;
       const lon = userPos.coords.longitude;
       const res = await fetch(
-        `https://us1.locationiq.com/v1/reverse.php?key=${LOCATION_IQ_KEY}&lat=` +
+        `${locationIqUrl}reverse.php?key=${LOCATION_IQ_KEY}&lat=` +
           lat +
           "&lon=" +
           lon +
@@ -23,10 +25,10 @@ const api = {
     }
   },
   async getWeather(lat, lon) {
-    const url = "https://api.openweathermap.org/data/2.5/onecall";
+    const openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall";
     try {
       const res = await fetch(
-        `${url}?lat=${lat}&lon=${lon}&exclude=alerts&appid=${OPEN_WEATHER_KEY}`
+        `${openWeatherUrl}?lat=${lat}&lon=${lon}&exclude=alerts&appid=${OPEN_WEATHER_KEY}`
       );
       const data = await res.json();
       return data;
@@ -36,11 +38,10 @@ const api = {
     }
   },
   async getCoordinates(city) {
-    const url = "https://us1.locationiq.com/v1/search.php";
     let lat, lon;
     try {
       const res = await fetch(
-        `${url}?key=${LOCATION_IQ_KEY}&q=${city}&format=json`
+        `${locationIqUrl}search.php?key=${LOCATION_IQ_KEY}&q=${city}&format=json`
       );
       const data = await res.json();
       lat = data[0].lat;

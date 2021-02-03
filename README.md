@@ -25,6 +25,10 @@ export const GOOGLE_KEY = "YOUR_API_KEY_HERE";
 4. Run `npm install`
 5. Run `npm run serve`
 
+## Notes
+
+You will need to use Node.js v12 or later.
+
 ## Built With
 
 - [Vue.js v3.x](https://vuejs.org/)
