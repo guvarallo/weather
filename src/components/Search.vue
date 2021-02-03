@@ -111,8 +111,6 @@ export default {
           let place = autocomplete.getPlace();
           if (place && place.address_components) {
             this.inputCity = place.address_components[0].long_name;
-            console.log(place.address_components);
-            console.log(this.inputCity);
           }
         }.bind(this)
       );
